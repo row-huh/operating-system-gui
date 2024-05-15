@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 import os
-
-
+import subprocess
 class OperatingSystem:
     def __init__(self, master):
         self.master = master
@@ -30,9 +29,11 @@ class OperatingSystem:
         self.process_menu.add_command(label="Create Thread", command=self.create_thread)
         self.process_menu.add_command(label="Display Processes", command=self.display_processes)
         self.process_menu.add_command(label="Kill Process", command=self.kill_process)
-        
-        
-        
+        self.application_menu = tk.Menu(self.main_menu, tearoff=0)
+        self.main_menu.add_cascade(label="Applications", menu=self.application_menu)
+        self.application_menu.add_command(label="Open Chrome", command=self.open_chrome)
+        self.application_menu.add_command(label="Open Photos", command=self.open_photos)
+
         
     def create_folder(self):
         folder_name = tk.simpledialog.askstring("Create Folder", "Enter folder name:")
@@ -42,8 +43,6 @@ class OperatingSystem:
                 messagebox.showinfo("Success", f"Folder '{folder_name}' created successfully.")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to create folder: {e}")
-
-
 
     def create_file(self):
         file_name = tk.simpledialog.askstring("Create File", "Enter file name:")
@@ -107,11 +106,23 @@ class OperatingSystem:
         # ... (existing code for displaying processes)
         pass
     
-    
     def kill_process(self):
         # Implement process killing functionality here
         pass
 
+    def open_chrome(self):
+        try:
+            subprocess.Popen(["Chrome"])
+            messagebox.showinfo("Success", "Chrome opened successfully.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to open Chrome: {e}")
+
+    def open_photos(self):
+        try:
+            subprocess.Popen(["Photos"])  # Replace "image-viewer" with the command to open your image viewer application
+            messagebox.showinfo("Success", "Photos opened successfully.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to open Photos: {e}")
 
 def main():
     root = tk.Tk()
