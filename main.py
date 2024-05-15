@@ -16,6 +16,7 @@ class OperatingSystem:
         self.main_menu.add_cascade(label="File", menu=self.file_menu)
         self.file_menu.add_command(label="Create Folder", command=self.create_folder)
         self.file_menu.add_command(label="Create File", command=self.create_file)
+        self.file_menu.add_command(label="Change File Rights", command=self.change_file_rights)
         self.file_menu.add_separator()
         self.file_menu.add_command(label="Exit", command=master.quit)
 
@@ -52,6 +53,16 @@ class OperatingSystem:
                 messagebox.showinfo("Success", f"File '{file_name}' created successfully.")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to create file: {e}")
+
+    def change_file_rights(self):
+        file_name = tk.simpledialog.askstring("Change File Rights", "Enter file name:")
+        if file_name:
+            try:
+                permissions = int(simpledialog.askstring("Change File Rights", "Enter permissions (e.g., 755):"), 8)
+                os.chmod(file_name, permissions)
+                messagebox.showinfo("Success", f"File permissions changed successfully.")
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to change file permissions: {e}")
 
 
     def search_files(self):
