@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 import subprocess
+import os
 
 class OperatingSystem:
     def __init__(self, master):
@@ -28,7 +29,7 @@ class OperatingSystem:
         folder_name = tk.simpledialog.askstring("Create Folder", "Enter folder name:")
         if folder_name:
             try:
-                subprocess.run(["mkdir", folder_name])
+                os.mkdir(folder_name)
                 messagebox.showinfo("Success", f"Folder '{folder_name}' created successfully.")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to create folder: {e}")
