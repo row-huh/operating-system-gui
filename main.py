@@ -23,6 +23,7 @@ class OperatingSystem:
         self.process_menu = tk.Menu(self.main_menu, tearoff=0)
         self.main_menu.add_cascade(label="Process", menu=self.process_menu)
         self.process_menu.add_command(label="Create Process", command=self.create_process)
+        self.process_menu.add_command(label="Create Thread", command=self.create_thread)
         self.process_menu.add_command(label="Display Processes", command=self.display_processes)
         self.process_menu.add_command(label="Kill Process", command=self.kill_process)
 
@@ -56,8 +57,25 @@ class OperatingSystem:
                 messagebox.showerror("Error", f"Failed to change file permissions: {e}")
 
     def create_process(self):
-        # Implement process creation functionality here
-        pass
+        command = tk.simpledialog.askstring("Create Process", "Enter command to execute:")
+        if command:
+            try:
+                subprocess.Popen(command, shell=True)
+                messagebox.showinfo("Success", "Process created successfully.")
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to create process: {e}")
+
+    def create_thread(self):
+        thread_function = self.sort_array_asc
+        thread = threading.Thread(target=thread_function)
+        thread.start()
+        messagebox.showinfo("Success", "Thread created successfully.")
+
+    def sort_array_asc(self):
+        # Example function to sort an array in ascending order
+        arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+        arr.sort()
+        print("Sorted array:", arr)
 
     def display_processes(self):
         try:
