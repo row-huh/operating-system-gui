@@ -10,6 +10,8 @@ class MiniOS:
     def __init__(self, root):
         self.root = root
         self.root.title("Mini OS")
+        self.root.geometry("400x400")
+
         
         self.create_widgets()
 
