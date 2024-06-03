@@ -98,29 +98,58 @@ class MiniOS:
     # - create a process that sorts array in ascending order
     # - create multiple threads that may help in solving matrix operations etc
     def create_process(self):
-        array = [5, 2, 9, 1, 5, 6]
-        p = multiprocessing.Process(target=sorted, args=(array,))
-        p.start()
-        p.join()
-        messagebox.showinfo("Info", f"Process created and array sorted: {array}")
+        command = tk.simpledialog.askstring("Create Process", "Enter command to execute:")
+        if command:
+            try:
+                subprocess.Popen(command, shell=True)
+                messagebox.showinfo("Success", "Process created successfully.")
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to create process: {e}")
+
+
+    def sort_array_asc(self):
+        # Example function to sort an array in ascending order
+        arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+        arr.sort()
+        print("Sorted array:", arr)
+
+
+    def check_process(self, process, queue):
+        if process.is_alive():
+            self.root.after(100, self.check_process, process, queue)
+        else:
+            sorted_array = queue.get()
+            messagebox.showinfo("Info", f"Process created and array sorted: {sorted_array}")
+
+
+    def sort_array_process(self, array, queue):
+        array.sort()
+        queue.put(array)
 
     def create_threads(self):
-        def sort_array():
-            array = [5, 2, 9, 1, 5, 6]
-            sorted_array = sorted(array)
-            messagebox.showinfo("Info", f"Thread: Array sorted: {sorted_array}")
-
-        def solve_matrix():
-            # Dummy matrix operation
-            matrix = [[1, 2], [3, 4]]
-            messagebox.showinfo("Info", f"Thread: Matrix operation result: {matrix}")
-
-        t1 = threading.Thread(target=sort_array)
-        t2 = threading.Thread(target=solve_matrix)
+        t1 = threading.Thread(target=self.sort_array_thread)
+        t2 = threading.Thread(target=self.solve_matrix_thread)
         t1.start()
         t2.start()
-        t1.join()
-        t2.join()
+        self.root.after(100, self.check_thread, t1, "Array sorted")
+        self.root.after(100, self.check_thread, t2, "Matrix operation result: [[1, 2], [3, 4]]")
+
+    def check_thread(self, thread, message):
+        if thread.is_alive():
+            self.root.after(100, self.check_thread, thread, message)
+        else:
+            messagebox.showinfo("Info", message)
+
+
+    def sort_array_thread(self):
+        array = [5, 2, 9, 1, 5, 6]
+        sorted_array = sorted(array)
+        return sorted_array
+
+    def solve_matrix_thread(self):
+        # Dummy matrix operation
+        matrix = [[1, 2], [3, 4]]
+        return matrix
 
 
 # 5. Allow to display processes like a task manager in windows and should allow to kill any selected process
