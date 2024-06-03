@@ -32,7 +32,9 @@ class MiniOS:
 
         app_menu = tk.Menu(menu)
         menu.add_cascade(label="Applications", menu=app_menu)
-        app_menu.add_command(label="Open Firefox", command=self.open_firefox)
+        app_menu.add_command(label="Open Chrome", command=self.open_chrome)
+        app_menu.add_command(label="Open Notepad", command=self.open_notepad)
+
 
         program_menu = tk.Menu(menu)
         menu.add_cascade(label="Programs", menu=program_menu)
@@ -40,6 +42,8 @@ class MiniOS:
         program_menu.add_command(label="Execute Program", command=self.execute_program)
         program_menu.add_command(label="Delete Program", command=self.delete_program)
 
+
+# 1. allow to create folders and files
     def create_folder(self):
             folder_name = tk.simpledialog.askstring("Create Folder", "Enter folder name:")
             if folder_name:
@@ -59,6 +63,7 @@ class MiniOS:
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to create file: {e}")
 
+# 2. allow to change rights of files
     def change_rights(self):
         file_name = tk.simpledialog.askstring("Change File Rights", "Enter file name:")
         if file_name:
@@ -70,6 +75,7 @@ class MiniOS:
                 messagebox.showerror("Error", f"Failed to change file permissions: {e}")
 
 
+# 3. Helps in searching files
     def search_files(self):
         search_term = simpledialog.askstring("Search Files", "Enter file name (or part of it) to search:")
         if search_term:
@@ -85,6 +91,10 @@ class MiniOS:
             else:
                 messagebox.showinfo("Search Results", "No files found matching your criteria.")
 
+
+# 4. Allow to create processes and threads that perform specific tasks:
+    # - create a process that sorts array in ascending order
+    # - create multiple threads that may help in solving matrix operations etc
     def create_process(self):
         array = [5, 2, 9, 1, 5, 6]
         p = multiprocessing.Process(target=sorted, args=(array,))
@@ -110,6 +120,8 @@ class MiniOS:
         t1.join()
         t2.join()
 
+
+# 5. Allow to display processes like a task manager in windows and should allow to kill any selected process
     def task_manager(self):
         process_list = psutil.pids()
         task_window = tk.Toplevel(self.root)
@@ -133,9 +145,27 @@ class MiniOS:
             p.terminate()
             messagebox.showinfo("Info", f"Process {pid} terminated")
 
-    def open_firefox(self):
-        subprocess.Popen(['firefox'])
 
+# 6 Allows to open applications
+    def open_chrome(self):
+        #TODO
+        ...
+
+    def open_notepad(self):
+        #TODO
+        ...
+    
+    # to add more
+    
+    
+    
+# 7 Allows to share data between processes
+    #TODO
+
+
+
+
+# 8 Allows to write python programs, provide options to execute and delete
     def write_program(self):
         program_code = simpledialog.askstring("Input", "Enter Python code:")
         if program_code:
