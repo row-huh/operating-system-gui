@@ -1,48 +1,53 @@
-import tkinter as tk
-from tkinter import simpledialog, messagebox
 import os
 import subprocess
-class OperatingSystem:
-    def __init__(self, master):
-        self.master = master
-        master.title("GUI Operating System")
+import threading
+import multiprocessing
+import tkinter as tk
+from tkinter import filedialog, simpledialog, messagebox
+import psutil
 
-        self.main_menu = tk.Menu(master)
-        master.config(menu=self.main_menu)
-
-        # Create main menu options
-        self.file_menu = tk.Menu(self.main_menu, tearoff=0)
-        self.main_menu.add_cascade(label="File", menu=self.file_menu)
-        self.file_menu.add_command(label="Create Folder", command=self.create_folder)
-        self.file_menu.add_command(label="Create File", command=self.create_file)
-        self.file_menu.add_command(label="Change File Rights", command=self.change_file_rights)
-        self.file_menu.add_separator()
-        self.file_menu.add_command(label="Exit", command=master.quit)
-
-        self.search_menu = tk.Menu(self.main_menu, tearoff=0)
-        self.main_menu.add_cascade(label="Search", menu=self.search_menu)
-        self.search_menu.add_command(label="Search Files", command=self.search_files)
-
-        self.process_menu = tk.Menu(self.main_menu, tearoff=0)
-        self.main_menu.add_cascade(label="Process", menu=self.process_menu)
-        self.process_menu.add_command(label="Create Process", command=self.create_process)
-        self.process_menu.add_command(label="Create Thread", command=self.create_thread)
-        self.process_menu.add_command(label="Display Processes", command=self.display_processes)
-        self.process_menu.add_command(label="Kill Process", command=self.kill_process)
-        self.application_menu = tk.Menu(self.main_menu, tearoff=0)
-        self.main_menu.add_cascade(label="Applications", menu=self.application_menu)
-        self.application_menu.add_command(label="Open Chrome", command=self.open_chrome)
-        self.application_menu.add_command(label="Open Photos", command=self.open_photos)
-
+class MiniOS:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Mini OS")
         
+        self.create_widgets()
+
+    def create_widgets(self):
+        menu = tk.Menu(self.root)
+        self.root.config(menu=menu)
+
+        file_menu = tk.Menu(menu)
+        menu.add_cascade(label="File", menu=file_menu)
+        file_menu.add_command(label="Create Folder", command=self.create_folder)
+        file_menu.add_command(label="Create File", command=self.create_file)
+        file_menu.add_command(label="Change Rights", command=self.change_rights)
+        file_menu.add_command(label="Search Files", command=self.search_files)
+
+        process_menu = tk.Menu(menu)
+        menu.add_cascade(label="Processes", menu=process_menu)
+        process_menu.add_command(label="Create Process", command=self.create_process)
+        process_menu.add_command(label="Create Threads", command=self.create_threads)
+        process_menu.add_command(label="Task Manager", command=self.task_manager)
+
+        app_menu = tk.Menu(menu)
+        menu.add_cascade(label="Applications", menu=app_menu)
+        app_menu.add_command(label="Open Firefox", command=self.open_firefox)
+
+        program_menu = tk.Menu(menu)
+        menu.add_cascade(label="Programs", menu=program_menu)
+        program_menu.add_command(label="Write Program", command=self.write_program)
+        program_menu.add_command(label="Execute Program", command=self.execute_program)
+        program_menu.add_command(label="Delete Program", command=self.delete_program)
+
     def create_folder(self):
-        folder_name = tk.simpledialog.askstring("Create Folder", "Enter folder name:")
-        if folder_name:
-            try:
-                os.mkdir(folder_name)
-                messagebox.showinfo("Success", f"Folder '{folder_name}' created successfully.")
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to create folder: {e}")
+            folder_name = tk.simpledialog.askstring("Create Folder", "Enter folder name:")
+            if folder_name:
+                try:
+                    os.mkdir(folder_name)
+                    messagebox.showinfo("Success", f"Folder '{folder_name}' created successfully.")
+                except Exception as e:
+                    messagebox.showerror("Error", f"Failed to create folder: {e}")
 
     def create_file(self):
         file_name = tk.simpledialog.askstring("Create File", "Enter file name:")
@@ -54,7 +59,7 @@ class OperatingSystem:
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to create file: {e}")
 
-    def change_file_rights(self):
+    def change_rights(self):
         file_name = tk.simpledialog.askstring("Change File Rights", "Enter file name:")
         if file_name:
             try:
@@ -80,55 +85,76 @@ class OperatingSystem:
             else:
                 messagebox.showinfo("Search Results", "No files found matching your criteria.")
 
-
     def create_process(self):
-        command = tk.simpledialog.askstring("Create Process", "Enter command to execute:")
-        if command:
-            try:
-                subprocess.Popen(command, shell=True)
-                messagebox.showinfo("Success", "Process created successfully.")
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to create process: {e}")
+        array = [5, 2, 9, 1, 5, 6]
+        p = multiprocessing.Process(target=sorted, args=(array,))
+        p.start()
+        p.join()
+        messagebox.showinfo("Info", f"Process created and array sorted: {array}")
 
-    def create_thread(self):
-        thread_function = self.sort_array_asc
-        thread = threading.Thread(target=thread_function)
-        thread.start()
-        messagebox.showinfo("Success", "Thread created successfully.")
+    def create_threads(self):
+        def sort_array():
+            array = [5, 2, 9, 1, 5, 6]
+            sorted_array = sorted(array)
+            messagebox.showinfo("Info", f"Thread: Array sorted: {sorted_array}")
 
-    def sort_array_asc(self):
-        # Example function to sort an array in ascending order
-        arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
-        arr.sort()
-        print("Sorted array:", arr)
+        def solve_matrix():
+            # Dummy matrix operation
+            matrix = [[1, 2], [3, 4]]
+            messagebox.showinfo("Info", f"Thread: Matrix operation result: {matrix}")
 
-    def display_processes(self):
-        # ... (existing code for displaying processes)
-        pass
-    
-    def kill_process(self):
-        # Implement process killing functionality here
-        pass
+        t1 = threading.Thread(target=sort_array)
+        t2 = threading.Thread(target=solve_matrix)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
 
-    def open_chrome(self):
-        try:
-            subprocess.Popen(["Chrome"])
-            messagebox.showinfo("Success", "Chrome opened successfully.")
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to open Chrome: {e}")
+    def task_manager(self):
+        process_list = psutil.pids()
+        task_window = tk.Toplevel(self.root)
+        task_window.title("Task Manager")
 
-    def open_photos(self):
-        try:
-            subprocess.Popen(["Photos"])  # Replace "image-viewer" with the command to open your image viewer application
-            messagebox.showinfo("Success", "Photos opened successfully.")
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to open Photos: {e}")
+        listbox = tk.Listbox(task_window)
+        listbox.pack(fill=tk.BOTH, expand=1)
 
-def main():
-    root = tk.Tk()
-    os = OperatingSystem(root)
-    root.mainloop()
+        for pid in process_list:
+            p = psutil.Process(pid)
+            listbox.insert(tk.END, f"{pid} - {p.name()}")
 
+        kill_button = tk.Button(task_window, text="Kill Process", command=lambda: self.kill_process(listbox))
+        kill_button.pack()
+
+    def kill_process(self, listbox):
+        selection = listbox.curselection()
+        if selection:
+            pid = int(listbox.get(selection[0]).split(" - ")[0])
+            p = psutil.Process(pid)
+            p.terminate()
+            messagebox.showinfo("Info", f"Process {pid} terminated")
+
+    def open_firefox(self):
+        subprocess.Popen(['firefox'])
+
+    def write_program(self):
+        program_code = simpledialog.askstring("Input", "Enter Python code:")
+        if program_code:
+            with open('user_program.py', 'w') as f:
+                f.write(program_code)
+            messagebox.showinfo("Info", "Program saved successfully")
+
+    def execute_program(self):
+        subprocess.run(['python', 'user_program.py'])
+        messagebox.showinfo("Info", "Program executed successfully")
+
+    def delete_program(self):
+        if os.path.exists('user_program.py'):
+            os.remove('user_program.py')
+            messagebox.showinfo("Info", "Program deleted successfully")
+        else:
+            messagebox.showwarning("Warning", "Program file not found")
 
 if __name__ == "__main__":
-    main()
+    root = tk.Tk()
+    app = MiniOS(root)
+    root.mainloop()
