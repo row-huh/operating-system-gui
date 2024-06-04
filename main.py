@@ -43,6 +43,13 @@ class MiniOS:
         program_menu.add_command(label="Write Program", command=self.write_program)
         program_menu.add_command(label="Execute Program", command=self.execute_program)
         program_menu.add_command(label="Delete Program", command=self.delete_program)
+        
+                # Adding submenu for sharing data between processes
+        share_data_menu = tk.Menu(process_menu)
+        process_menu.add_cascade(label="Share Data Between Processes", menu=share_data_menu)
+        share_data_menu.add_command(label="Select Process1", command=self.select_process1)
+        share_data_menu.add_command(label="Select Process2", command=self.select_process2)
+        share_data_menu.add_command(label="Link Processes", command=self.link_processes)
 
 
 # 1. allow to create folders and files
@@ -152,6 +159,8 @@ class MiniOS:
         return matrix
 
 
+
+
 # 5. Allow to display processes like a task manager in windows and should allow to kill any selected process
     def task_manager(self):
         process_list = psutil.pids()
@@ -177,6 +186,8 @@ class MiniOS:
             messagebox.showinfo("Info", f"Process {pid} terminated")
 
 
+
+
 # 6 Allows to open applications
     def open_chrome(self):
         #TODO
@@ -192,9 +203,77 @@ class MiniOS:
     
 # 7 Allows to share data between processes
     #TODO
+       # Variables to store the selected processes
+    def select_process1(self):
+        self.process1_command = simpledialog.askstring("Select Process1", "Enter command for Process1:")
+        if self.process1_command:
+            messagebox.showinfo("Info", f"Process1 selected: {self.process1_command}")
+
+    def select_process2(self):
+        self.process2_command = simpledialog.askstring("Select Process2", "Enter command for Process2:")
+        if self.process2_command:
+            messagebox.showinfo("Info", f"Process2 selected: {self.process2_command}")
+
+    def link_processes(self):
+        if hasattr(self, 'process1_command') and hasattr(self, 'process2_command'):
+            output_file = "output1.txt"
+            
+            # Run process1
+            process1 = subprocess.Popen(self.process1_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = process1.communicate()
+            
+            if process1.returncode == 0:
+                with open(output_file, 'w') as f:
+                    f.write(stdout.decode())
+            else:
+                messagebox.showerror("Error", f"Process 1 failed: {stderr.decode()}")
+                return
+            
+            # Ensure file is written before starting process2
+            if os.path.exists(output_file):
+                # Run process2
+                process2 = subprocess.Popen(f"{self.process2_command} {output_file}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                stdout, stderr = process2.communicate()
+                
+                if process2.returncode == 0:
+                    messagebox.showinfo("Info", f"Process 2 completed successfully: {stdout.decode()}")
+                else:
+                    messagebox.showerror("Error", f"Process 2 failed: {stderr.decode()}")
+            else:
+                messagebox.showerror("Error", "Output file not created by Process 1")
+        else:
+            messagebox.showerror("Error", "Please select both Process 1 and Process 2")
+            
+            
+    def run_process1(self, command, output_file):
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        if process.returncode == 0:
+            with open(output_file, 'w') as f:
+                f.write(stdout.decode())
+        else:
+            with open(output_file, 'w') as f:
+                f.write(stderr.decode())
 
 
+    def run_process2(self, command, input_file):
+        process = subprocess.Popen(f"{command} {input_file}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        if process.returncode == 0:
+            print(stdout.decode())
+        else:
+            print(stderr.decode())   
 
+    '''
+    def run_process(self, command, queue, output_file):
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        if process.returncode == 0:
+            with open(output_file, 'w') as f:
+                f.write(stdout.decode())
+            queue.put(output_file)
+        else:
+            queue.put(stderr.decode())'''
 
 # 8 Allows to write python programs, provide options to execute and delete
     def write_program(self):
