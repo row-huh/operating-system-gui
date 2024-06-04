@@ -190,12 +190,12 @@ class MiniOS:
 
 # 6 Allows to open applications
     def open_chrome(self):
-        #TODO
-        ...
+        # Open Google Chrome
+        subprocess.call('C:\Program Files\Google\Chrome\Application\chrome.exe')
+
 
     def open_notepad(self):
-        #TODO
-        ...
+        subprocess.call('notepad.exe')
     
     # to add more
     
