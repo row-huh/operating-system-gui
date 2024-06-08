@@ -52,7 +52,7 @@ class MiniOS:
         share_data_menu.add_command(label="Link Processes", command=self.link_processes)
 
 
-# 1. allow to create folders and files
+# 1. It allows you to create folders and files. 
     def create_folder(self):
             folder_name = tk.simpledialog.askstring("Create Folder", "Enter folder name:")
             if folder_name:
@@ -72,7 +72,7 @@ class MiniOS:
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to create file: {e}")
 
-# 2. allow to change rights of files
+#2. It allows you to change rights of your files. 
     def change_rights(self):
         file_name = tk.simpledialog.askstring("Change File Rights", "Enter file name:")
         if file_name:
