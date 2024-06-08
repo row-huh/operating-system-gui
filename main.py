@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import simpledialog, messagebox
 import psutil
 
+#Main class
 class MiniOS:
     def __init__(self, root):
         self.root = root
