@@ -84,7 +84,7 @@ class MiniOS:
                 messagebox.showerror("Error", f"Failed to change file permissions: {e}")
 
 
-# 3. Helps in searching files
+# 3. It can help you in searching files. 
     def search_files(self):
         search_term = simpledialog.askstring("Search Files", "Enter file name (or part of it) to search:")
         if search_term:
@@ -102,8 +102,6 @@ class MiniOS:
 
 
 # 4. Allow to create processes and threads that perform specific tasks:
-    # - create a process that sorts array in ascending order
-    # - create multiple threads that may help in solving matrix operations etc
     def create_process(self):
         command = tk.simpledialog.askstring("Create Process", "Enter command to execute:")
         if command:
@@ -113,12 +111,13 @@ class MiniOS:
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to create process: {e}")
 
-
+    # - create a process that sorts array in ascending order
     def sort_array_asc(self):
         # Example function to sort an array in ascending order
         arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
         arr.sort()
         print("Sorted array:", arr)
+    # - create multiple threads that may help in solving matrix operations etc
 
 
     def check_process(self, process, queue):
@@ -197,7 +196,8 @@ class MiniOS:
     def open_notepad(self):
         subprocess.call('notepad.exe')
     
-    # to add more
+    def open_cmd(self):
+        subprocess.call('cmd.exe')
     
     
     
