@@ -1,9 +1,8 @@
 import os
 import subprocess
 import threading
-import multiprocessing
 import tkinter as tk
-from tkinter import filedialog, simpledialog, messagebox
+from tkinter import simpledialog, messagebox
 import psutil
 
 class MiniOS:
@@ -147,7 +146,7 @@ class MiniOS:
         else:
             messagebox.showinfo("Info", message)
 
-
+    # dummy operations
     def sort_array_thread(self):
         array = [5, 2, 9, 1, 5, 6]
         sorted_array = sorted(array)
@@ -191,7 +190,7 @@ class MiniOS:
 # 6 Allows to open applications
     def open_chrome(self):
         # Open Google Chrome
-        subprocess.call('C:\Program Files\Google\Chrome\Application\chrome.exe')
+        subprocess.call('C:/Program Files/Google/Chrome/Application/chrome.exe')
 
 
     def open_notepad(self):
@@ -202,7 +201,7 @@ class MiniOS:
     
     
 # 7 Allows to share data between processes
-    #TODO
+
        # Variables to store the selected processes
     def select_process1(self):
         self.process1_command = simpledialog.askstring("Select Process1", "Enter command for Process1:")
@@ -224,7 +223,7 @@ class MiniOS:
             
             if process1.returncode == 0:
                 with open(output_file, 'w') as f:
-                    f.write(stdout.decode())
+                    f.write(stdout.decode())    
             else:
                 messagebox.showerror("Error", f"Process 1 failed: {stderr.decode()}")
                 return
@@ -244,36 +243,8 @@ class MiniOS:
         else:
             messagebox.showerror("Error", "Please select both Process 1 and Process 2")
             
-            
-    def run_process1(self, command, output_file):
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
-        if process.returncode == 0:
-            with open(output_file, 'w') as f:
-                f.write(stdout.decode())
-        else:
-            with open(output_file, 'w') as f:
-                f.write(stderr.decode())
 
 
-    def run_process2(self, command, input_file):
-        process = subprocess.Popen(f"{command} {input_file}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
-        if process.returncode == 0:
-            print(stdout.decode())
-        else:
-            print(stderr.decode())   
-
-    '''
-    def run_process(self, command, queue, output_file):
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
-        if process.returncode == 0:
-            with open(output_file, 'w') as f:
-                f.write(stdout.decode())
-            queue.put(output_file)
-        else:
-            queue.put(stderr.decode())'''
 
 # 8 Allows to write python programs, provide options to execute and delete
     def write_program(self):
@@ -293,6 +264,9 @@ class MiniOS:
             messagebox.showinfo("Info", "Program deleted successfully")
         else:
             messagebox.showwarning("Warning", "Program file not found")
+
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()
